@@ -1,0 +1,22 @@
+<!DOCTYPE>
+<html>	
+<head>
+<meta charset='utf-8'>
+</head>
+<body>
+<script type="text/javascript">
+var socket = new Webscket('ws://game.raytang.me');
+
+socket.onopen = function(event){
+	socket.send('I am the client and I\'m listening!');
+}
+socket.onmessage = function(event){
+	console.log('cliend received a message', event);
+}
+
+socket.onclose = function(event){
+	console.log('client notified socket has closed', event);
+}
+</script>
+</body>
+</html>
