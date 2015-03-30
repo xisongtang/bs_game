@@ -1,22 +1,36 @@
-<!DOCTYPE>
+<!DOCTYPE HTML>
 <html>	
 <head>
+<title>game</title>
 <meta charset='utf-8'>
 </head>
 <body>
+<input type='text' name='content' id='content'/>
+<input type='button' id='send' name='send' value='send' />
+<div id="received"></div>
+<script type="text/javascript" src='./header.js'></script>
 <script type="text/javascript">
-var socket = new Webscket('ws://game.raytang.me');
-
+var addr = 'ws://' + address + ':' + port;
+window.WebSocket = window.WebSocket || window.MozWebSocket;
+var socket = new WebSocket(addr);
+var user_cookie;
 socket.onopen = function(event){
-	socket.send('I am the client and I\'m listening!');
+	var cookies = parseCookies(document.cookie);
+	user_cookie = cookies['bs_client'];
+	socket.send(JSON.stringify({content:'I am the client and I\'m listening!',user:user_cookie}));
 }
 socket.onmessage = function(event){
-	console.log('cliend received a message', event);
+	document.getElementById('received').innerHTML += '<p>' + event.data + '</p>';
+	console.log('client received a message', event);
 }
 
 socket.onclose = function(event){
 	console.log('client notified socket has closed', event);
 }
+document.getElementById('send').onclick = function(event){
+	socket.send(JSON.stringify({content:document.getElementById('content').value,user:user_cookie}));
+}
 </script>
+
 </body>
 </html>
