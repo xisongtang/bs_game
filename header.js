@@ -1,4 +1,4 @@
-function parseCookies (cookie) {
+/*function parseCookies (cookie) {
     var list = {},
         rc = cookie;
 
@@ -9,13 +9,11 @@ function parseCookies (cookie) {
 
     return list;
 }
-
+*/
 if (typeof exports === 'undefined'){
-	this.address = '10.132.64.248';
+	this.address = 'game.raytang.me';
 	this.port = 8083;
-	this.parseCookies = parseCookies;
 } else {
 	exports.port = 8083;
-	exports.address = '10.132.64.248';
-	exports.parseCookies = parseCookies;
+	exports.address = '45.55.134.129';
 }
