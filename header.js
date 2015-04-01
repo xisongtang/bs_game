@@ -11,11 +11,11 @@ function parseCookies (cookie) {
 }
 
 if (typeof exports === 'undefined'){
-	this.address = '127.0.0.1';
+	this.address = '10.132.64.248';
 	this.port = 8083;
 	this.parseCookies = parseCookies;
 } else {
 	exports.port = 8083;
-	exports.address = '127.0.0.1';	
+	exports.address = '10.132.64.248';
 	exports.parseCookies = parseCookies;
 }

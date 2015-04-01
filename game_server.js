@@ -4,13 +4,13 @@ var first = true;
 var clients = [];
 
 var server = http.createServer(function(req, res){
-	//console.log(req.url);
-
-	var des = './' + req.url.substr(1);
+	var des = './';
+	console.log(req.url, des, 'here');
 	if (des === './')
 		des = './game.html';
 	fs.readFile(des, 'utf-8', function (err, str) {
 		if (err){
+			console.log(err);
 			return;
 		}
 		var cookies = header.parseCookies(req.headers.cookie);
@@ -22,7 +22,6 @@ var server = http.createServer(function(req, res){
 		{
 			var exp = new Date(); 
 			exp.setTime(exp.getTime() + 5 * 60 * 1000);
-			console.log(String.valueOf(Date.now ? Date.now() : (new Date().getTime())));
 			resobj['Set-Cookie'] = 'bs_client=' + md5(String(Date.now ? Date.now() : (new Date().getTime()))) + ';expires=' + exp.toGMTString();
 		}
 		
@@ -75,5 +74,4 @@ wsserver.on('request', function(request){
 			delete umap[user];
 		}
 	});
-	//connection.sendUTF('I\'ve received you request' + cookies['bs_client']);
 });
