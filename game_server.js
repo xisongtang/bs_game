@@ -24,14 +24,14 @@ wsserver.on('request', function(request){
 	}
 	else
 		clients.push(user);
-	console.log(clients, pmap);
+	console.log('clients queue:', clients);
+	console.log('pmap:', pmap);
 	connection.on('message', function(message){
 		var data = JSON.parse(message.utf8Data);
-		console.log(data);
 		if (pmap[data.user] === undefined)
-			console.log('unpaired');
+			console.log('unpaired', data);
 		else{
-			console.log('paired');
+			console.log('paired', data);
 			umap[pmap[data.user]].sendUTF(data.content);
 		}
 	});
@@ -40,8 +40,8 @@ wsserver.on('request', function(request){
 		if (left === undefined)
 			clients.shift();
 		else{
-			pmap[left] = undefined;
 			clients.push(left);
+			delete pmap[user];
 			delete pmap[left];
 		}
 		delete umap[user];
