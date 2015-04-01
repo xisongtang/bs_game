@@ -5,8 +5,7 @@ var clients = [];
 
 var server = http.createServer(function(req, res){
 	//console.log(req.url);
-
-	var des = './' + req.url.substr(1);
+	/*var des = './' + req.url.substr(1);
 	if (des === './')
 		des = './game.html';
 	fs.readFile(des, 'utf-8', function (err, str) {
@@ -29,7 +28,7 @@ var server = http.createServer(function(req, res){
 		res.writeHead(200, resobj);
 		res.write(str);
 		res.end();
-	});
+	});*/
 }).listen(header.port, header.address, function(){
 	console.log('Game server running at http://' + header.address + ':' + header.port + '/');
 });
@@ -39,14 +38,10 @@ var wsserver = new webSocketServer({
 });
 var umap = {}, pmap = {};
 wsserver.on('request', function(request){
-	var cookies = header.parseCookies(request.httpRequest.headers.cookie), user = cookies['bs_client'];
-	if (umap[user] !== undefined){
-		console.log('existed');
-		request.reject();
-		return void 0;
-	}
+	user = md5(String(Date.now ? Date.now() : (new Date().getTime())));
+	var ret = {'from':'server', 'content':'bs_client=' + user};
 	var connection = request.accept(null, request.origin);
-	console.log(clients, pmap);
+	connection.sendUTF(JSON.stringify(ret));
 	umap[user] = connection;
 	if (clients.length > 0){
 		pmap[user] = clients.shift();
@@ -57,6 +52,7 @@ wsserver.on('request', function(request){
 	console.log(clients, pmap);
 	connection.on('message', function(message){
 		var data = JSON.parse(message.utf8Data);
+		console.log(data);
 		if (pmap[data.user] === undefined)
 			console.log('unpaired');
 		else{
@@ -72,8 +68,9 @@ wsserver.on('request', function(request){
 			pmap[left] = undefined;
 			clients.push(left);
 			delete pmap[left];
-			delete umap[user];
 		}
+		delete umap[user];
+		console.log(user, 'close');
 	});
 	//connection.sendUTF('I\'ve received you request' + cookies['bs_client']);
 });

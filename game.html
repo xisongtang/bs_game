@@ -13,22 +13,26 @@
 var addr = 'ws://' + address + ':' + port;
 window.WebSocket = window.WebSocket || window.MozWebSocket;
 var socket = new WebSocket(addr);
-var user_cookie;
+console.log(document.cookie);
+var userid;
 socket.onopen = function(event){
-	var cookies = parseCookies(document.cookie);
-	user_cookie = cookies['bs_client'];
-	socket.send(JSON.stringify({content:'I am the client and I\'m listening!',user:user_cookie}));
+	socket.send(JSON.stringify('I am the client and I\'m listening!'));
 }
 socket.onmessage = function(event){
-	document.getElementById('received').innerHTML += '<p>' + event.data + '</p>';
+	var d = JSON.parse(event.data);
 	console.log('client received a message', event);
+	if (d.from !== undefined){
+		userid = parseCookies(d.content)['bs_client'];
+		return;
+	}
+	document.getElementById('received').innerHTML += '<p>' + event.data + '</p>';
 }
 
 socket.onclose = function(event){
 	console.log('client notified socket has closed', event);
 }
 document.getElementById('send').onclick = function(event){
-	socket.send(JSON.stringify({content:document.getElementById('content').value,user:user_cookie}));
+	socket.send(JSON.stringify({content:document.getElementById('content').value,user:userid}));
 }
 </script>
 
