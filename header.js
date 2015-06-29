@@ -11,9 +11,9 @@
 }
 */
 if (typeof exports === 'undefined'){
-	this.address = 'game.raytang.me';
+	this.address = '127.0.0.1';
 	this.port = 8083;
 } else {
 	exports.port = 8083;
-	exports.address = '45.55.134.129';
+	exports.address = '127.0.0.1';
 }

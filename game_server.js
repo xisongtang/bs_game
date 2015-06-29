@@ -13,7 +13,7 @@ var wsserver = new webSocketServer({
 });
 var umap = {}, pmap = {};
 wsserver.on('request', function(request){
-	user = md5(String(Date.now ? Date.now() : (new Date().getTime())));
+	var user = md5(String(Date.now ? Date.now() : (new Date().getTime())));
 	var ret = {'from':'server', 'content':user};
 	var connection = request.accept(null, request.origin);
 	connection.sendUTF(JSON.stringify(ret));
@@ -29,9 +29,9 @@ wsserver.on('request', function(request){
 	connection.on('message', function(message){
 		var data = JSON.parse(message.utf8Data);
 		if (pmap[data.user] === undefined)
-			console.log('unpaired', data);
+			console.log('unpaired', data, user);
 		else{
-			console.log('paired', data);
+			console.log('paired', data, user);
 			umap[pmap[data.user]].sendUTF(data.content);
 		}
 	});
